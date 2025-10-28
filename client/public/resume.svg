@@ -1,0 +1,20 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#4f46e5"/>
+  
+  <!-- Document Icon -->
+  <path d="M70 60 H130 V140 H70 Z" fill="white"/>
+  <path d="M70 60 L90 80 H130 V60 Z" fill="#e0e7ff"/>
+  
+  <!-- AI Chip Lines -->
+  <rect x="80" y="90" width="40" height="40" fill="none" stroke="white" stroke-width="5"/>
+  <line x1="80" y1="90" x2="80" y2="80" stroke="white" stroke-width="5"/>
+  <line x1="120" y1="90" x2="120" y2="80" stroke="white" stroke-width="5"/>
+  <line x1="80" y1="130" x2="80" y2="140" stroke="white" stroke-width="5"/>
+  <line x1="120" y1="130" x2="120" y2="140" stroke="white" stroke-width="5"/>
+  
+  <!-- Text Lines (simulating resume content) -->
+  <rect x="75" y="65" width="50" height="5" fill="#4f46e5"/>
+  <rect x="75" y="75" width="40" height="5" fill="#4f46e5"/>
+  <rect x="75" y="85" width="45" height="5" fill="#4f46e5"/>
+</svg>
