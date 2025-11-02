@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 
 const MinimalImageTemplate = ({ data, accentColor }) => {
     const formatDate = (dateStr) => {
@@ -18,7 +18,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                     {/* Image */}
                     {data.personal_info?.image && typeof data.personal_info.image === 'string' ? (
                         <div className="mb-6">
-                            <img src={data.personal_info.image} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" style={{ background: accentColor+'70' }} />
+                            <img src={data.personal_info.image} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" style={{ background: accentColor + '70' }} />
                         </div>
                     ) : (
                         data.personal_info?.image && typeof data.personal_info.image === 'object' ? (
@@ -67,6 +67,18 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                                     <span>{data.personal_info.location}</span>
                                 </div>
                             )}
+                            {data.personal_info?.linkedin && (
+                                <a target="_blank" href={data.personal_info.linkedin} className="flex items-center gap-2">
+                                    <Linkedin size={14} style={{ color: accentColor }} />
+                                    <span className="break-all">{data.personal_info.linkedin}</span>
+                                </a>
+                            )}
+                            {data.personal_info?.website && (
+                                <a target="_blank" href={data.personal_info.website} className="flex items-center gap-2">
+                                    <Globe size={14} style={{ color: accentColor }} />
+                                    <span className="break-all">{data.personal_info.website}</span>
+                                </a>
+                            )}
                         </div>
                     </section>
 
@@ -79,8 +91,13 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             <div className="space-y-4 text-sm">
                                 {data.education.map((edu, index) => (
                                     <div key={index}>
-                                        <p className="font-semibold uppercase">{edu.degree}</p>
+                                        <p className="font-semibold uppercase">
+                                            {edu.degree} {edu.field && `in ${edu.field}`}
+                                        </p>
                                         <p className="text-zinc-600">{edu.institution}</p>
+                                        {edu.gpa && (
+                                            <p className="text-xs text-zinc-500">GPA: {edu.gpa}</p>
+                                        )}
                                         <p className="text-xs text-zinc-500">
                                             {formatDate(edu.graduation_date)}
                                         </p>

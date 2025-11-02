@@ -1,75 +1,6 @@
-// import { User } from "lucide-react";
-// import React from "react";
 
-// function PersonalInfo({
-//   data,
-//   onchange,
-//   removeBackground,
-//   setRemoveBackground,
-// }) {
-//   const handleChange = (field, value) => {
-//     onchange({
-//       ...data,
-//       [field]: value,
-//     });
-//   };
 
-//   return (
-//     <div>
-//       <h3 className="text-lg font-semibold text-gray-900">
-//         Personal Information
-//       </h3>
-//       <p>Get Started with the personal</p>
-//       <div className="flex items-center gap-2">
-//         <label>
-//           {data.image ? (
-//             <img
-//               src={
-//                 typeof data.image === "string"
-//                   ? data.image
-//                   : URL.createObjectURL(data.image)
-//               }
-//               alt="user-img"
-//               className="w-16 h-16 rounded-full object-cover mt-5 ring ring-slate-300 hover:opacity-80"
-//             />
-//           ) : (
-//             <div className="w-16 h-16 bg-gray-200 flex items-center justify-center text-gray-500">
-//               <User className="size-10 p-2.5 border border-gray-300 rounded-full" />
-//               UPload User Image
-//             </div>
-//           )}
-//           <input
-//             type="file"
-//             accept="image/jpg,image/jpeg,image/png"
-//             onChange={(e) => handleChange("image", e.target.files[0])}
-//           />
-//         </label>
-
-//         {typeof data.image === "object" && (
-//           <div className="flex flex-col gap-1 pl-4 text-sm">
-//             <p>Remove Background</p>
-//             <label htmlFor=""  className="relative inline-flex items- cursor-pointer text-gray-900 gap-3">
-//               <input type="checkbox" className="sr-only peer"
-//               onchange={()=>setRemoveBackground(prev=>!prev)}  checked={removeBackground}/>
-//               <div className="w-9 h-5 bg-slate-900 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-colors duration-200">
-
-//               </div>
-//               <span className="dot absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4">
-
-//               </span>
-
-//             </label>
-//             input:c
-//           </div >
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default PersonalInfo;
-
-import { User } from "lucide-react";
+import { BriefcaseBusiness, Globe, Linkedin, Mail, MapPin, Phone, User } from "lucide-react";
 import React from "react";
 
 function PersonalInfo({
@@ -86,7 +17,14 @@ function PersonalInfo({
   };
 
   const fields=[
-    {key:"Full_name",label:"Full"}
+            {key:"full_name",label:"Full Name",icon:User,type:"text",required:true},
+            {key:"email",label:"Email Address",icon:Mail,type:"email",required:true},
+            {key:"phone",label:"Phone Number",icon:Phone,type:"tel"},
+            {key:"location",label:"Location",icon:MapPin,type:"text"},
+            {key:"profession",label:"Profession",icon:BriefcaseBusiness,type:"text"},
+            {key:"linkedin",label:"Linkedin Profile",icon:Linkedin,type:"url"},
+            {key:"website",label:"Personal Website",icon:Globe,type:"url"}
+
   ]
 
   return (
@@ -127,7 +65,7 @@ function PersonalInfo({
         </label>
 
         {/* ✅ Only show if image is uploaded */}
-        {data.image && (
+        {typeof data.image==="object" && (
           <div className="flex flex-col gap-2 pl-2 text-sm">
             <p className="font-medium text-gray-700">Remove Background</p>
 
@@ -144,7 +82,43 @@ function PersonalInfo({
           </div>
         )}
       </div>
+{
+  fields.map((fields)=>{
 
+const Icon=fields.icon;
+
+return(
+  <div key={fields.key} className="space-y-1 mt-5">
+    <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+      <Icon className="size-4"/>
+      {fields.label}
+      {fields.required && <span className="text-red-500">*</span>}
+
+    </label>
+    <input type={fields.type} value={data[fields.key] || "" } onChange={(e)=>handleChange(fields.key,e.target.value)}
+    
+    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors text-sm " placeholder={`Enter your ${fields.label.toLowerCase()}`}
+required={fields.required}    
+    
+    
+    />
+    
+  
+
+
+
+
+    </div>
+
+
+
+
+)
+
+
+
+  })
+}
 
 
 

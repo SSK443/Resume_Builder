@@ -16,6 +16,11 @@ const MinimalTemplate = ({ data, accentColor }) => {
                 <h1 className="text-4xl font-thin mb-4 tracking-wide">
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
+                {data.personal_info?.profession && (
+                    <p className="uppercase text-gray-600 font-medium text-sm tracking-widest mb-2">
+                        {data.personal_info.profession}
+                    </p>
+                )}
 
                 <div className="flex flex-wrap gap-6 text-sm text-gray-600">
                     {data.personal_info?.email && <span>{data.personal_info.email}</span>}
@@ -78,6 +83,9 @@ const MinimalTemplate = ({ data, accentColor }) => {
                         {data.project.map((proj, index) => (
                             <div key={index} className="flex flex-col gap-2 justify-between items-baseline">
                                 <h3 className="text-lg font-medium ">{proj.name}</h3>
+                                {proj.type && (
+                                    <p className="text-sm" style={{ color: accentColor }}>{proj.type}</p>
+                                )}
                                 <p className="text-gray-600">{proj.description}</p>
                             </div>
                         ))}
