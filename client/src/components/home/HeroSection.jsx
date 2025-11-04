@@ -26,6 +26,7 @@ function HeroSection() {
           </h1>
         </Link>
         {/* Navigation Menu */}
+     
         <nav
           className={`fixed md:static inset-0 z-50 md:flex md:flex-row flex-col items-center justify-center transition-all duration-300 ease-in-out bg-white/90 md:bg-transparent backdrop-blur-sm text-gray-900 text-sm font-normal ${
             menuOpen
@@ -44,36 +45,51 @@ function HeroSection() {
             >
               Home
             </NavLink>
-            <NavLink
-              to="/Feature"
-              className={({ isActive }) =>
-                `text-base sm:text-sm hover:text-indigo-600 ${
-                  isActive ? "text-indigo-600 font-semibold" : ""
-                }`
-              }
+
+            {/* Smooth scroll to Features */}
+            <a
+              href="#features"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("features")
+                  ?.scrollIntoView({ behavior: "smooth" });
+                setMenuOpen(false); // Close mobile menu
+              }}
+              className="text-base sm:text-sm hover:text-indigo-600 cursor-pointer"
             >
-              features
-            </NavLink>
-            <NavLink
-              to="/testimonials"
-              className={({ isActive }) =>
-                `text-base sm:text-sm hover:text-indigo-600 ${
-                  isActive ? "text-indigo-600 font-semibold" : ""
-                }`
-              }
+              Features
+            </a>
+
+            {/* Smooth scroll to Testimonials */}
+            <a
+              href="#testimonials"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("testimonials")
+                  ?.scrollIntoView({ behavior: "smooth" });
+                setMenuOpen(false);
+              }}
+              className="text-base sm:text-sm hover:text-indigo-600 cursor-pointer"
             >
               Testimonials
-            </NavLink>
-            <NavLink
-              to="/Contact"
-              className={({ isActive }) =>
-                `text-base sm:text-sm hover:text-indigo-600 ${
-                  isActive ? "text-indigo-600 font-semibold" : ""
-                }`
-              }
+            </a>
+
+            {/* Smooth scroll to Contact (Footer) */}
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" });
+                setMenuOpen(false);
+              }}
+              className="text-base sm:text-sm hover:text-indigo-600 cursor-pointer"
             >
               Contact
-            </NavLink>
+            </a>
 
             {/* Close Menu Button (Mobile) */}
             <button
@@ -95,7 +111,6 @@ function HeroSection() {
             </button>
           </div>
         </nav>
-
         {/* Buttons (Desktop) */}
         <div className="hidden md:flex space-x-4">
           <Link
@@ -111,7 +126,6 @@ function HeroSection() {
             Get Started
           </Link>
         </div>
-
         {/* Open Menu Button (Mobile) */}
         <button
           onClick={() => {

@@ -346,6 +346,28 @@ function ResumeBuilder() {
 
   const activeSection = sections[activeSectionIndex];
 
+const changeResumeVisibility=async()=>{
+  setResumeData({...resumeData,public:!resumeData.public})
+}
+
+const handleShare=()=>{
+  const frontendUrl=window.location.href.split("/app/")[0];
+
+  const resumeUrl=frontendUrl+"/view/"+resumeId;
+  
+  if(navigator.share){
+    navigator.share({url:resumeUrl,text:"My Resume",})
+  }else{
+    alert("sharing is not supported on this browser")
+  }
+
+ 
+}
+
+const downloadResume=()=>{
+  window.print();
+
+}
   return (
     <div>
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -508,20 +530,20 @@ function ResumeBuilder() {
               <div className="absolute bottom-3  left-0 right-0 flex items-center justify-end gap-2">
                 {
                   resumeData.public && (
-                    <button onClick={() => { }} className=" flex items-center gap-2 p-2 px-4 text-sm  bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-all duration-300">
+                    <button onClick={handleShare} className=" flex items-center gap-2 p-2 px-4 text-sm  bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-all duration-300">
                       <Share2Icon className="size-4" />
-                      Public
+                      share
                     </button>
                   )
                 }
-                <button className=" flex items-center gap-2 p-2 px-4 text-sm  bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-all duration-300">
+                <button onClick={changeResumeVisibility} className=" flex items-center gap-2 p-2 px-4 text-sm  bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-all duration-300">
                   {
                     resumeData.public ? <EyeIcon className="size-4" /> : <EyeOffIcon className="size-4" />
                   }
                   {resumeData.public ? "Public" : "Private"}
                 </button>
 
-                <button className=" flex items-center gap-2 p-2 px-4 text-sm  bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-all duration-300">
+                <button onClick={downloadResume} className=" flex items-center gap-2 p-2 px-4 text-sm  bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-all duration-300">
                   <DownloadIcon className="size-4" />
                   Download
                 </button>
