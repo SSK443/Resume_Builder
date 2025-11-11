@@ -1,46 +1,11 @@
-# This one .gitignore file in your root folder is all you need.
-
-# --- CRITICAL ---
-# Never commit your environment variables.
-# This is the most important file to ignore!
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# --- NODE.js ---
-# Ignore all node_modules folders, wherever they are.
-# This single line will cover BOTH /client/node_modules and /server/node_modules
+# Node
 node_modules/
+.env
 
-# NPM log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# --- FRONTEND (Vite / React) ---
-# Ignore the build output folder
+# Client build
 client/dist/
-
-# Vite cache directory
 .vite/
 
-# --- BACKEND (Node) ---
-# Ignore the 'uploads' folder you were using with Multer
-# Even if you fixed it, it's good practice to ignore
-uploads/
-
-# --- IDE / EDITOR ---
-# VS Code
-.vscode/
-
-# JetBrains (WebStorm, IntelliJ)
-.idea/
-
-# --- OPERATING SYSTEM ---
-# macOS
+# OS
 .DS_Store
-
-# Windows
 Thumbs.db
