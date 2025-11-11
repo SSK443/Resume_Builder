@@ -12,7 +12,7 @@ function Footer() {
           <div className="md:max-w-96">
             <Link to="/" className="flex items-center gap-3 hover:no-underline">
               <img
-                src="./resume.svg"
+                src="./assets/resume.svg"
                 alt="AI Resume Builder Icon"
                 width="50"
                 height="50"
