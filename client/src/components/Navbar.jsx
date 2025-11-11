@@ -1,14 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../app/features/authSlice";
 
 function Navbar() {
-  const user = {
-    name: "ssk",
-  };
-
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const logoutUser = () => {
     navigate("/");
+    dispatch(logout());
   };
 
   return (
@@ -19,8 +21,9 @@ function Navbar() {
           to="/"
           className="flex items-center gap-3 hover:no-underline group"
         >
+          {/* FIXED: Absolute path from public/ */}
           <img
-            src="./resume.svg"
+         src="./assets/resume.svg"
             alt="AI Resume Builder Icon"
             width="50"
             height="50"

@@ -4,11 +4,14 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const mongodb_uri = process.env.MONGODB_URI;
-    const projectName = "AI-Resume-Builder";
+    const mongodbURI = process.env.MONGODB_URI;
+    const projectName = "resume-builder";
 
-    if (!mongodb_uri) {
+    if (!mongodbURI) {
       throw new Error("❌ MONGODB_URI environment variable not set");
+    }
+    if(mongodbURI.endsWith('/')){
+      mongodbURI=mongodbURI.slice(0,-1)
     }
 
     // Log connection events
@@ -21,7 +24,7 @@ const connectDB = async () => {
     });
 
     // Connect to MongoDB
-    await mongoose.connect(`${mongodb_uri}/${projectName}`);
+    await mongoose.connect(`${mongodbURI}/${projectName}`);
   } catch (error) {
     console.error("❌ Error connecting to MongoDB:", error.message);
     process.exit(1);

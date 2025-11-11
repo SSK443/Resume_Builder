@@ -1,27 +1,48 @@
-import { User2Icon ,Mail,Lock} from 'lucide-react';
-import React from 'react'
+import { User2Icon, Mail, Lock } from 'lucide-react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../app/features/authSlice';
+import api from "../configs/api"
+import toast from 'react-hot-toast';
 
 function Login() {
 
-  const query=new URLSearchParams(window.location.search);
-  const urlState=query.get('state')
-  
-    const [state, setState] = React.useState(urlState||"login");
+  const query = new URLSearchParams(window.location.search);
+  const urlState = query.get('state')
 
-    const [formData, setFormData] = React.useState({
-      name: "",
-      email: "",
-      password: "",
-    });
+  const [state, setState] = React.useState(urlState || "login");
+  const [error, setError] = React.useState("");
+  const [loading, setLocalLoading] = React.useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    };
+  const [formData, setFormData] = React.useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const { data } = await api.post(`/api/users/${state}`, formData);
+      dispatch(login(data));
+      localStorage.setItem("token", data.token);
+
+      toast.success(data.message );
+
+    } catch (error) {
+
+      toast(error?.response?.data?.message || error.message );
+    }
+  }
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <form
@@ -32,6 +53,11 @@ function Login() {
           {state === "login" ? "Login" : "Sign up"}
         </h1>
         <p className="text-gray-500 text-sm mt-2">Please {state} to continue</p>
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
         {state !== "login" && (
           <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
             <User2Icon size={16} color="#687280" />
@@ -59,7 +85,7 @@ function Login() {
           />
         </div>
         <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-         <Lock size={13} color="#687280"/>
+          <Lock size={13} color="#687280" />
           <input
             type="password"
             name="password"
@@ -77,9 +103,10 @@ function Login() {
         </div>
         <button
           type="submit"
-          className="mt-2 w-full h-11 rounded-full text-white bg-indigo-600 hover:opacity-90 transition-opacity"
+          disabled={loading}
+          className="mt-2 w-full h-11 rounded-full text-white bg-indigo-600 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {state === "login" ? "Login" : "Sign up"}
+          {loading ? "Loading..." : (state === "login" ? "Login" : "Sign up")}
         </button>
         <p
           onClick={() =>

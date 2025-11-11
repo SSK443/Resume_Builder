@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 
+
 function HeroSection() {
+  const{user}=useSelector(state=>state.auth)
   const [menuOpen, setMenuOpen] = useState(false);
+
 
   return (
     <section
@@ -15,7 +19,7 @@ function HeroSection() {
       <header className="flex items-center justify-between px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32 py-4 w-full max-w-screen-2xl mx-auto">
         <Link to="/" className="flex items-center gap-3 hover:no-underline">
           <img
-            src="./resume.svg"
+            src="./assets/resume.svg"
             alt="AI Resume Builder Icon"
             width="50"
             height="50"
@@ -26,7 +30,7 @@ function HeroSection() {
           </h1>
         </Link>
         {/* Navigation Menu */}
-     
+
         <nav
           className={`fixed md:static inset-0 z-50 md:flex md:flex-row flex-col items-center justify-center transition-all duration-300 ease-in-out bg-white/90 md:bg-transparent backdrop-blur-sm text-gray-900 text-sm font-normal ${
             menuOpen
@@ -114,16 +118,26 @@ function HeroSection() {
         {/* Buttons (Desktop) */}
         <div className="hidden md:flex space-x-4">
           <Link
-            to="/app?state=register"
+            to="/app?state=login"
             className="text-indigo-600 bg-indigo-100 px-4 sm:px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-200 transition"
+            hidden={user}
           >
             Log In
           </Link>
           <Link
-            to="/app?state=login"
+            to="/app?state=register"
             className="bg-indigo-600 text-white px-4 sm:px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition"
+            hidden={user}
           >
             Get Started
+          </Link>
+
+          <Link
+            to="/app"
+            className="bg-indigo-600 text-white px-4 sm:px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition"
+            hidden={!user}
+          >
+            dashboard
           </Link>
         </div>
         {/* Open Menu Button (Mobile) */}
@@ -188,7 +202,7 @@ function HeroSection() {
 
           <div className="flex flex-col sm:flex-row items-center mt-6 sm:mt-8 gap-3 sm:gap-4">
             <Link
-              to="/app"
+              to="/app?state=register"
               className="bg-indigo-600 text-white px-5 sm:px-6 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 hover:bg-indigo-700 transition"
             >
               <span>Get Started</span>
@@ -209,10 +223,7 @@ function HeroSection() {
               </svg>
             </Link>
 
-            <Link
-              to="/sample-resumes"
-              className="text-indigo-600 bg-indigo-100 px-4 sm:px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-200 transition"
-            >
+            <Link className="text-indigo-600 bg-indigo-100 px-4 sm:px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-200 transition">
               See Sample Resumes
             </Link>
           </div>

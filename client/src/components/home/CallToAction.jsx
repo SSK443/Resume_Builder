@@ -25,7 +25,7 @@ function CallToAction() {
           tools, designed to help you land your dream job.
         </p>
         <Link
-          to="/build-resume"
+          to="/app?state=register"
           className="px-6 sm:px-8 py-2 sm:py-2.5 mt-4 sm:mt-6 text-xs sm:text-sm md:text-base bg-gradient-to-r from-indigo-600 to-violet-500 hover:scale-105 transition duration-300 text-white rounded-full"
         >
           Build Your Resume Now

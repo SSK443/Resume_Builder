@@ -1,9 +1,17 @@
-"use client";
 
-import { Plus } from "lucide-react";
-import React from "react";
+
+
+
+import { Loader2, Plus } from "lucide-react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import api from "../configs/api"; // Make sure this path is correct
 
 const ExperienceForm = ({ data, onChange }) => {
+  const { token } = useSelector((state) => state.auth);
+  const [generatingIndex, setGeneratingIndex] = useState(-1); // Fixed: useState hook
+
   const addExperience = () => {
     const newExperience = {
       company: "",
@@ -27,6 +35,60 @@ const ExperienceForm = ({ data, onChange }) => {
     onChange(updated);
   };
 
+  // FIXED: generateDescription
+  const generateDescription = async (index) => {
+    const experience = data[index];
+
+    // Guard clauses
+    if (!experience.position?.trim() || !experience.company?.trim()) {
+      toast.error("Please fill Position and Company first!");
+      return;
+    }
+
+    if (!token) {
+      toast.error("Please log in to use AI features.");
+      return;
+    }
+
+    setGeneratingIndex(index);
+
+    const prompt = `Enhance this job description for a ${
+      experience.position
+    } at ${
+      experience.company
+    }. Make it concise, impactful, and achievement-focused. Use action verbs and quantify where possible. Current draft: "${
+      experience.description || "None"
+    }"`;
+
+    try {
+      const response = await api.post(
+        "/api/ai/enhance-job-desc",
+        { userContent: prompt },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Fixed: Bearer token
+          },
+        }
+      );
+
+      const enhancedText = response.data.enhancedContent; // Fixed: spelling
+
+      if (enhancedText) {
+        updateExperience(index, "description", enhancedText);
+        toast.success("Job description enhanced!");
+      }
+    } catch (error) {
+      console.error("AI Enhance Error:", error);
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to enhance description.";
+      toast.error(message);
+    } finally {
+      setGeneratingIndex(-1);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -38,7 +100,7 @@ const ExperienceForm = ({ data, onChange }) => {
         </div>
         <button
           onClick={addExperience}
-          className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all"
         >
           <Plus className="size-4" />
           Add Experience
@@ -68,7 +130,9 @@ const ExperienceForm = ({ data, onChange }) => {
               className="p-4 border border-gray-200 rounded-lg space-y-3"
             >
               <div className="flex justify-between items-start">
-                <h4>Experience #{index + 1}</h4>
+                <h4 className="font-medium text-gray-700">
+                  Experience #{index + 1}
+                </h4>
                 <button
                   onClick={() => removeExperience(index)}
                   className="text-red-500 hover:text-red-700 transition-colors"
@@ -91,53 +155,45 @@ const ExperienceForm = ({ data, onChange }) => {
               </div>
 
               <div className="grid md:grid-cols-2 gap-3">
-                <div>
-                  <input
-                    value={experience.company || ""}
-                    onChange={(e) =>
-                      updateExperience(index, "company", e.target.value)
-                    }
-                    type="text"
-                    placeholder="Company Name"
-                    className="px-3 py-2 text-sm rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-                <div>
-                  <input
-                    value={experience.position || ""}
-                    onChange={(e) =>
-                      updateExperience(index, "position", e.target.value)
-                    }
-                    type="text"
-                    placeholder="Job Title"
-                    className="px-3 py-2 text-sm rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-                <div>
-                  <input
-                    value={experience.start_date || ""}
-                    onChange={(e) =>
-                      updateExperience(index, "start_date", e.target.value)
-                    }
-                    type="month"
-                    className="px-3 py-2 text-sm rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-                <div>
-                  <input
-                    value={experience.end_date || ""}
-                    onChange={(e) =>
-                      updateExperience(index, "end_date", e.target.value)
-                    }
-                    type="month"
-                    disabled={experience.is_current}
-                    className={`px-3 py-2 text-sm rounded-lg w-full border ${
-                      experience.is_current
-                        ? "bg-gray-100 cursor-not-allowed"
-                        : "border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    }`}
-                  />
-                </div>
+                <input
+                  value={experience.company || ""}
+                  onChange={(e) =>
+                    updateExperience(index, "company", e.target.value)
+                  }
+                  type="text"
+                  placeholder="Company Name"
+                  className="px-3 py-2 text-sm rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <input
+                  value={experience.position || ""}
+                  onChange={(e) =>
+                    updateExperience(index, "position", e.target.value)
+                  }
+                  type="text"
+                  placeholder="Job Title"
+                  className="px-3 py-2 text-sm rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <input
+                  value={experience.start_date || ""}
+                  onChange={(e) =>
+                    updateExperience(index, "start_date", e.target.value)
+                  }
+                  type="month"
+                  className="px-3 py-2 text-sm rounded-lg w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <input
+                  value={experience.end_date || ""}
+                  onChange={(e) =>
+                    updateExperience(index, "end_date", e.target.value)
+                  }
+                  type="month"
+                  disabled={experience.is_current}
+                  className={`px-3 py-2 text-sm rounded-lg w-full border ${
+                    experience.is_current
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  }`}
+                />
               </div>
 
               <label className="flex items-center gap-2">
@@ -145,13 +201,9 @@ const ExperienceForm = ({ data, onChange }) => {
                   type="checkbox"
                   checked={experience.is_current || false}
                   onChange={(e) =>
-                    updateExperience(
-                      index,
-                      "is_current",
-                      e.target.checked ? true : false
-                    )
+                    updateExperience(index, "is_current", e.target.checked)
                   }
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                 />
                 <span className="text-sm text-gray-700">
                   Currently working here
@@ -164,24 +216,35 @@ const ExperienceForm = ({ data, onChange }) => {
                     Job Description
                   </label>
                   <button
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
-                    disabled={true} // AI feature placeholder
+                    onClick={() => generateDescription(index)}
+                    disabled={
+                      generatingIndex === index ||
+                      !experience.position?.trim() ||
+                      !experience.company?.trim()
+                    }
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-3 h-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    Enhance with AI
+                    {generatingIndex === index ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-3 h-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                    )}
+                    {generatingIndex === index
+                      ? "Enhancing..."
+                      : "Enhance with AI"}
                   </button>
                 </div>
                 <textarea
